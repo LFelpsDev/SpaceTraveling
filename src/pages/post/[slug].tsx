@@ -12,8 +12,11 @@ import { useRouter } from 'next/router';
 import { format } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-BR'
 
+import Link from 'next/link'
+
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
   data: {
     title: string;
     banner: {
@@ -31,9 +34,10 @@ interface Post {
 
 interface PostProps {
   post: Post;
+  preview: Boolean;
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, preview }: PostProps) {
 
   const totalWords = post.data.content.reduce((total, contentItem) => {
     total += contentItem.heading.split(' ').length;
@@ -61,6 +65,7 @@ export default function Post({ post }: PostProps) {
     }
   )
 
+
   return (
     <>
       <Head>
@@ -86,6 +91,7 @@ export default function Post({ post }: PostProps) {
                 {`${readTime} Min`}
               </li>
             </ul>
+           
           </div>
           {post.data.content.map((content) => (
             <article key={content.heading}>
@@ -95,7 +101,14 @@ export default function Post({ post }: PostProps) {
                 dangerouslySetInnerHTML={{ __html: RichText.asHtml(content.body) }}
               />
             </article>
-          ))}
+          ))}  
+          {preview && (
+            <div>
+              <Link href="/api/exit-preview" >
+                <a className={commonStyles.preview}>Sair do Modo Preview</a>
+              </Link>
+            </div>
+          )}
         </div>
       </main>
     </>
@@ -124,11 +137,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params, preview = false,  previewData}) => {
   const { slug } = params
 
   const prismic = getPrismicClient();
-  const response = await prismic.getByUID('post', String(slug), {});
+  const response = await prismic.getByUID('post', String(slug), {
+    ref: previewData?.ref || null
+  });
 
   const post = {
     uid: response.uid,
@@ -149,11 +164,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }
   }
 
+
   // console.log(JSON.stringify(post, null, 2))
 
   return {
     props: {
-      post
+      post,
+      preview,
     },
     revalidate: 60 * 60 * 24
   }

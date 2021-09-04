@@ -3,3 +3,21 @@
   margin: 0 auto;
   padding: 0 2rem;
 }
+
+.preview {
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-weight: 600;
+  padding: 1rem;
+  background: var(--body);
+  border-radius: 0.35rem;
+
+  transition: filter 0.4s;
+
+  margin: 5rem 0;
+
+  &:hover {
+    filter: brightness(0.8);
+  }
+}

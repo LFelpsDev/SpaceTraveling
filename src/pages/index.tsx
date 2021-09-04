@@ -15,6 +15,8 @@ import { format } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-BR'
 import { useState } from 'react';
 
+import {Comments } from '../components/Comments'
+
 interface Post {
   uid?: string;
   first_publication_date: string | null;
