@@ -15,7 +15,6 @@ import { format } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-BR'
 import { useState } from 'react';
 
-import {Comments } from '../components/Comments'
 
 interface Post {
   uid?: string;
@@ -34,10 +33,11 @@ interface PostPagination {
 
 interface HomeProps {
   postsPagination: PostPagination;
+  preview: boolean;
 }
 
 
-export default function Home({ postsPagination }: HomeProps): JSX.Element {
+export default function Home({ postsPagination, preview }: HomeProps): JSX.Element {
   
   const formattedPost = postsPagination.results.map(post => {
     return {
@@ -117,16 +117,23 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
             onClick={handleNextPage}
             type="button" 
             >
-              Carregar Mais Posts
+              Carregar mais posts
             </button>
           )}
         </div>
+        {preview && (
+            <aside>
+              <Link href="/api/exit-preview" >
+                <a className={commonStyles.preview}>Sair do Modo Preview</a>
+              </Link>
+            </aside>
+          )}
       </main>
     </>
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async ({preview = false}) => {
   const prismic = getPrismicClient();
 
   const postsResponse = await prismic.query([
@@ -154,7 +161,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   return {
     props: {
-      postsPagination
+      postsPagination, preview
     },
     revalidate: 60 * 60 * 24,
   }

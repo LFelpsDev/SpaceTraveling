@@ -63,10 +63,29 @@
 
     li {
       color: var(--highlight);
-      
     }
 }
 }
 
+.containerNavigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rem 0;
+  border-top: 1px solid var(--body);
+  
+  h3 {
+    color: var(--info);
+    font-size: 1rem;
+  
+  }
 
+  a {
+    color: var(--highlight);
+  }
+}
 
+.editPost {
+  font-size: 0.8rem;
+  margin-top: 0.7rem;
+}
