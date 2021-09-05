@@ -57,21 +57,11 @@ interface PostProps {
 
 export default function Post({ post, preview, navigation }: PostProps) {
 
-  const editDate = format(
-    new Date(post.last_publication_date),
-    'dd MMM yyyy',
-    {
-      locale: ptBr
-    }
-  )
+  const router = useRouter();
 
-  const hoursEdit = format(
-    new Date(post.last_publication_date),
-    'HH:MM',
-    {
-      locale: ptBr
-    }
-  )
+  if (router.isFallback) {
+    return <h1>Carregando...</h1>
+  }
 
 
   const totalWords = post.data.content.reduce((total, contentItem) => {
@@ -86,15 +76,26 @@ export default function Post({ post, preview, navigation }: PostProps) {
 
   const readTime = Math.ceil(totalWords / 200);
 
-  const router = useRouter();
-
-  if (router.isFallback) {
-    return <h1>Carregando...</h1>
-  }
 
   const formattedDate = format(
     new Date(post.first_publication_date),
     'dd MMM yyyy',
+    {
+      locale: ptBr
+    }
+  )
+
+  const editDate = format (
+    new Date(post.last_publication_date),
+    'dd MMM yyyy',
+    {
+      locale: ptBr
+    }
+  )
+
+  const hoursEdit = format (
+    new Date(post.last_publication_date),
+    'HH:MM',
     {
       locale: ptBr
     }
